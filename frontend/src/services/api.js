@@ -1,17 +1,19 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_BASE_URL = 'http://localhost:8000';
+// Use deployed backend in production, localhost during local development
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 /**
  * Sends network traffic features to backend model for classification.
- * 
+ *
  * Payload structure:
  * {
  *   packet_size: float,
@@ -29,25 +31,38 @@ const apiClient = axios.create({
  */
 export const predictTraffic = async (payload) => {
   try {
-    const response = await apiClient.post('/predict', payload);
+    const response = await apiClient.post("/predict", payload);
     return response.data;
   } catch (error) {
-    console.error('API Error during network anomaly prediction:', error);
-    // Extract server message or fallback
-    const serverMessage = error.response?.data?.detail || error.message;
+    console.error(
+      "API Error during network anomaly prediction:",
+      error
+    );
+
+    const serverMessage =
+      error.response?.data?.detail ||
+      error.message ||
+      "Prediction failed";
+
     throw new Error(serverMessage);
   }
 };
 
 /**
- * Performs simple healthcheck to confirm backend availability.
+ * Performs backend healthcheck
  */
 export const checkBackendHealth = async () => {
   try {
-    const response = await apiClient.get('/');
+    const response = await apiClient.get("/");
     return response.data;
   } catch (error) {
-    console.error('Backend healthcheck failed:', error);
-    return { status: 'offline', error: error.message };
+    console.error("Backend healthcheck failed:", error);
+
+    return {
+      status: "offline",
+      error: error.message,
+    };
   }
 };
+
+export default apiClient;
