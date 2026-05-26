@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShieldAlert, Play, RefreshCw, Terminal, Sliders } from 'lucide-react';
+import { useState } from 'react';
+import { Play, RefreshCw, Terminal, Sliders } from 'lucide-react';
 
 const PRESETS = [
   {
@@ -114,16 +114,16 @@ export default function PredictionForm({ onSubmit, loading }) {
   return (
     <div className="cyber-card" style={{ height: '100%' }}>
       <div className="flex align-center justify-between" style={{ marginBottom: '24px' }}>
-        <h2 className="text-glow-cyan" style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Terminal size={18} /> Network Telemetry Analyzer
+        <h2 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontWeight: 700 }}>
+          <Terminal size={18} style={{ color: 'var(--accent-cyan)' }} /> Network Telemetry Analyzer
         </h2>
-        <span className="mono" style={{ fontSize: '0.8rem', opacity: 0.6 }}>INPUT_PANEL_v1.2</span>
+        <span className="mono" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>INPUT_PANEL_v1.2</span>
       </div>
 
       {/* Preset Selectors */}
       <div style={{ marginBottom: '24px' }}>
-        <span className="cyber-label" style={{ marginBottom: '10px', fontSize: '0.75rem' }}>Presets Scenarios</span>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <span className="cyber-label" style={{ marginBottom: '10px', fontSize: '0.75rem' }}>Preset Scenarios</span>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {PRESETS.map((p, idx) => (
             <button
               key={idx}
@@ -131,12 +131,23 @@ export default function PredictionForm({ onSubmit, loading }) {
               className="cyber-input"
               style={{
                 width: 'auto',
-                padding: '6px 12px',
+                padding: '8px 14px',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
-                background: 'rgba(0, 242, 254, 0.05)',
-                borderColor: 'rgba(0, 242, 254, 0.25)',
-                color: 'var(--accent-cyan)'
+                background: 'var(--bg-secondary)',
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-primary)',
+                borderRadius: '6px',
+                fontWeight: 600,
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--accent-cyan)';
+                e.currentTarget.style.background = 'var(--bg-card-hover)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+                e.currentTarget.style.background = 'var(--bg-secondary)';
               }}
               onClick={() => loadPreset(p)}
               title={p.description}
@@ -260,27 +271,27 @@ export default function PredictionForm({ onSubmit, loading }) {
           <div className="cyber-form-group" style={{ gridColumn: 'span 2' }}>
             <label className="cyber-label">Protocol Selection</label>
             <div style={{ display: 'flex', gap: '30px', marginTop: '8px' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--text-primary)' }}>
                 <input
                   type="radio"
                   name="protocol"
                   value="TCP"
                   checked={formData.protocol === 'TCP'}
                   onChange={handleProtocolChange}
-                  style={{ accentColor: 'var(--accent-cyan)' }}
+                  style={{ accentColor: 'var(--accent-cyan)', width: '16px', height: '16px' }}
                 />
-                <span style={{ fontSize: '0.9rem' }}>TCP Protocol</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>TCP Protocol</span>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--text-primary)' }}>
                 <input
                   type="radio"
                   name="protocol"
                   value="UDP"
                   checked={formData.protocol === 'UDP'}
                   onChange={handleProtocolChange}
-                  style={{ accentColor: 'var(--accent-cyan)' }}
+                  style={{ accentColor: 'var(--accent-cyan)', width: '16px', height: '16px' }}
                 />
-                <span style={{ fontSize: '0.9rem' }}>UDP Protocol</span>
+                <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>UDP Protocol</span>
               </label>
             </div>
           </div>
@@ -290,14 +301,14 @@ export default function PredictionForm({ onSubmit, loading }) {
               <label className="cyber-label">TCP Flags</label>
               <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginTop: '8px' }}>
                 {['FIN', 'SYN', 'SYN_ACK'].map(flag => (
-                  <label key={flag} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <label key={flag} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--text-primary)' }}>
                     <input
                       type="checkbox"
                       checked={formData.tcp_flags.includes(flag)}
                       onChange={() => handleFlagCheckbox(flag)}
-                      style={{ accentColor: 'var(--accent-cyan)' }}
+                      style={{ accentColor: 'var(--accent-cyan)', width: '16px', height: '16px' }}
                     />
-                    <span style={{ fontSize: '0.9rem' }}>{flag.replace('_', '-')}</span>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>{flag.replace('_', '-')}</span>
                   </label>
                 ))}
               </div>
@@ -313,9 +324,9 @@ export default function PredictionForm({ onSubmit, loading }) {
             onClick={() => setAdvancedOpen(!advancedOpen)}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Sliders size={14} /> Advanced Network Settings
+              <Sliders size={14} style={{ color: 'var(--accent-cyan)' }} /> Advanced Network Settings
             </span>
-            <span>{advancedOpen ? '▲' : '▼'}</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{advancedOpen ? '▲' : '▼'}</span>
           </div>
 
           {advancedOpen && (

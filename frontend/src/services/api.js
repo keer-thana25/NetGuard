@@ -35,7 +35,7 @@ export const predictTraffic = async (payload) => {
     console.error('API Error during network anomaly prediction:', error);
     // Extract server message or fallback
     const serverMessage = error.response?.data?.detail || error.message;
-    throw new Error(serverMessage);
+    throw new Error(serverMessage, { cause: error });
   }
 };
 

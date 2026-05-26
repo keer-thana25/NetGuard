@@ -1,15 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Dashboard from './pages/Dashboard';
 import TrafficAnalysis from './pages/TrafficAnalysis';
 import Analytics from './pages/Analytics';
 import ModelInsights from './pages/ModelInsights';
 import About from './pages/About';
 import { checkBackendHealth } from './services/api';
-import { Shield, LayoutDashboard, Search, BarChart3, Binary, Info, Wifi, WifiOff } from 'lucide-react';
+import { Shield, LayoutDashboard, Search, BarChart3, Binary, Info, Wifi, WifiOff, Sun, Moon } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [backendStatus, setBackendStatus] = useState('checking');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark';
+  });
+
+  // Apply theme to document
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   // Check FastAPI backend server health
   useEffect(() => {
@@ -28,30 +37,34 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   const renderActiveContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard onNavigate={setActiveTab} />;
+        return <Dashboard onNavigate={setActiveTab} theme={theme} />;
       case 'analysis':
-        return <TrafficAnalysis />;
+        return <TrafficAnalysis theme={theme} />;
       case 'analytics':
-        return <Analytics />;
+        return <Analytics theme={theme} />;
       case 'insights':
-        return <ModelInsights />;
+        return <ModelInsights theme={theme} />;
       case 'about':
-        return <About />;
+        return <About theme={theme} />;
       default:
-        return <Dashboard onNavigate={setActiveTab} />;
+        return <Dashboard onNavigate={setActiveTab} theme={theme} />;
     }
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', transition: 'background var(--transition-speed) ease' }}>
       
       {/* Top Navbar */}
       <header 
         style={{
-          background: 'rgba(5, 8, 17, 0.75)',
+          background: 'var(--header-bg)',
           backdropFilter: 'blur(12px)',
           borderBottom: '1px solid var(--border-color)',
           position: 'sticky',
@@ -61,7 +74,8 @@ export default function App() {
           height: '70px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'between'
+          justifyContent: 'between',
+          transition: 'background var(--transition-speed) ease, border-color var(--transition-speed) ease'
         }}
       >
         <div className="flex justify-between align-center" style={{ width: '100%' }}>
@@ -76,7 +90,7 @@ export default function App() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 0 10px rgba(0, 242, 254, 0.4)'
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.15)'
               }}
             >
               <Shield size={20} style={{ color: '#fff' }} />
@@ -93,166 +107,131 @@ export default function App() {
             
             <button
               onClick={() => setActiveTab('dashboard')}
-              style={{
-                background: activeTab === 'dashboard' ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                color: activeTab === 'dashboard' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'dashboard' ? 600 : 500,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                borderBottom: activeTab === 'dashboard' ? '2px solid var(--accent-cyan)' : '2px solid transparent',
-                borderRadius: '6px 6px 0 0'
-              }}
+              className={`nav-button ${activeTab === 'dashboard' ? 'active' : ''}`}
+              id="nav-dashboard"
             >
               <LayoutDashboard size={16} /> Dashboard
             </button>
 
             <button
               onClick={() => setActiveTab('analysis')}
-              style={{
-                background: activeTab === 'analysis' ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                color: activeTab === 'analysis' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'analysis' ? 600 : 500,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                borderBottom: activeTab === 'analysis' ? '2px solid var(--accent-cyan)' : '2px solid transparent',
-                borderRadius: '6px 6px 0 0'
-              }}
+              className={`nav-button ${activeTab === 'analysis' ? 'active' : ''}`}
+              id="nav-analysis"
             >
               <Search size={16} /> Traffic Analysis
             </button>
 
             <button
               onClick={() => setActiveTab('analytics')}
-              style={{
-                background: activeTab === 'analytics' ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                color: activeTab === 'analytics' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'analytics' ? 600 : 500,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                borderBottom: activeTab === 'analytics' ? '2px solid var(--accent-cyan)' : '2px solid transparent',
-                borderRadius: '6px 6px 0 0'
-              }}
+              className={`nav-button ${activeTab === 'analytics' ? 'active' : ''}`}
+              id="nav-analytics"
             >
               <BarChart3 size={16} /> Analytics
             </button>
 
             <button
               onClick={() => setActiveTab('insights')}
-              style={{
-                background: activeTab === 'insights' ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                color: activeTab === 'insights' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'insights' ? 600 : 500,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                borderBottom: activeTab === 'insights' ? '2px solid var(--accent-cyan)' : '2px solid transparent',
-                borderRadius: '6px 6px 0 0'
-              }}
+              className={`nav-button ${activeTab === 'insights' ? 'active' : ''}`}
+              id="nav-insights"
             >
               <Binary size={16} /> Model Insights
             </button>
 
             <button
               onClick={() => setActiveTab('about')}
-              style={{
-                background: activeTab === 'about' ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 16px',
-                color: activeTab === 'about' ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-                fontSize: '0.9rem',
-                fontWeight: activeTab === 'about' ? 600 : 500,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                borderBottom: activeTab === 'about' ? '2px solid var(--accent-cyan)' : '2px solid transparent',
-                borderRadius: '6px 6px 0 0'
-              }}
+              className={`nav-button ${activeTab === 'about' ? 'active' : ''}`}
+              id="nav-about"
             >
               <Info size={16} /> About
             </button>
 
           </nav>
 
-          {/* Live API Health Check Indicator */}
-          <div className="flex align-center gap-10">
-            {backendStatus === 'online' ? (
-              <div 
-                className="flex align-center gap-10 mono" 
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--threat-low)',
-                  background: 'rgba(5, 236, 140, 0.08)',
-                  padding: '6px 12px',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(5, 236, 140, 0.2)'
-                }}
-              >
-                <Wifi size={14} />
-                <span>API_SYS: ONLINE</span>
-                <span className="pulse-indicator green" style={{ width: '6px', height: '6px', marginLeft: '2px' }}></span>
-              </div>
-            ) : backendStatus === 'checking' ? (
-              <div 
-                className="flex align-center gap-10 mono" 
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--text-secondary)',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  padding: '6px 12px',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 255, 255, 0.1)'
-                }}
-              >
-                <span>SYS_HEALTH_CHECKING...</span>
-              </div>
-            ) : (
-              <div 
-                className="flex align-center gap-10 mono" 
-                style={{
-                  fontSize: '0.8rem',
-                  color: 'var(--threat-high)',
-                  background: 'rgba(255, 56, 56, 0.08)',
-                  padding: '6px 12px',
-                  borderRadius: '20px',
-                  border: '1px solid rgba(255, 56, 56, 0.2)'
-                }}
-                title="Please make sure FastAPI Uvicorn backend is running on http://localhost:8000"
-              >
-                <WifiOff size={14} />
-                <span>API_SYS: OFFLINE</span>
-                <span className="pulse-indicator red" style={{ width: '6px', height: '6px', marginLeft: '2px' }}></span>
-              </div>
-            )}
+          {/* Right Side: Theme Toggle & Health Check Indicator */}
+          <div className="flex align-center gap-20">
+            
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              style={{
+                background: 'rgba(255, 255, 255, 0.08)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '50%',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#fff',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'}
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Theme`}
+              id="theme-toggle-btn"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+
+            {/* Live API Health Check Indicator */}
+            <div className="flex align-center gap-10">
+              {backendStatus === 'online' ? (
+                <div 
+                  className="flex align-center gap-10 mono" 
+                  style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--threat-low)',
+                    background: 'rgba(16, 185, 129, 0.08)',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(16, 185, 129, 0.2)',
+                    transition: 'all var(--transition-speed) ease'
+                  }}
+                  id="api-status-online"
+                >
+                  <Wifi size={14} />
+                  <span>API_SYS: ONLINE</span>
+                  <span className="pulse-indicator green" style={{ width: '6px', height: '6px', marginLeft: '2px' }}></span>
+                </div>
+              ) : backendStatus === 'checking' ? (
+                <div 
+                  className="flex align-center gap-10 mono" 
+                  style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--text-secondary)',
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    transition: 'all var(--transition-speed) ease'
+                  }}
+                  id="api-status-checking"
+                >
+                  <span>SYS_HEALTH_CHECKING...</span>
+                </div>
+              ) : (
+                <div 
+                  className="flex align-center gap-10 mono" 
+                  style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--threat-high)',
+                    background: 'rgba(239, 68, 68, 0.08)',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                    transition: 'all var(--transition-speed) ease'
+                  }}
+                  title="Please make sure FastAPI Uvicorn backend is running on http://localhost:8000"
+                  id="api-status-offline"
+                >
+                  <WifiOff size={14} />
+                  <span>API_SYS: OFFLINE</span>
+                  <span className="pulse-indicator red" style={{ width: '6px', height: '6px', marginLeft: '2px' }}></span>
+                </div>
+              )}
+            </div>
+
           </div>
 
         </div>
@@ -266,12 +245,13 @@ export default function App() {
       {/* Footer */}
       <footer 
         style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.03)',
+          borderTop: '1px solid var(--border-color)',
           padding: '20px',
           textAlign: 'center',
           color: 'var(--text-muted)',
           fontSize: '0.75rem',
-          background: 'rgba(5, 8, 17, 0.9)'
+          background: 'var(--footer-bg)',
+          transition: 'background var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease'
         }}
       >
         <p className="mono">NETGUARD SECURE SYSTEM v1.2.0 // POWERED BY SCIKIT-LEARN RANDOM FOREST ENGINE</p>

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PredictionForm from '../components/PredictionForm';
 import ResultCard from '../components/ResultCard';
 import { predictTraffic } from '../services/api';
-import { ShieldCheck, ShieldAlert, Cpu } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
-export default function TrafficAnalysis() {
+export default function TrafficAnalysis({ theme }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,7 +29,7 @@ export default function TrafficAnalysis() {
       
       {/* Header section */}
       <div style={{ marginBottom: '24px' }}>
-        <h2 className="text-glow-cyan" style={{ fontSize: '1.75rem', fontWeight: 700 }}>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--text-primary)' }}>
           Network Traffic Analysis Console
         </h2>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '4px' }}>
@@ -41,17 +41,20 @@ export default function TrafficAnalysis() {
         <div 
           className="cyber-card" 
           style={{ 
-            background: 'rgba(255, 56, 56, 0.1)', 
+            background: 'rgba(239, 68, 68, 0.08)', 
             borderColor: 'var(--threat-high)', 
             color: 'var(--threat-high)',
             padding: '16px',
             marginBottom: '24px',
-            fontSize: '0.9rem'
+            fontSize: '0.9rem',
+            borderRadius: '12px'
           }}
         >
           <div className="flex align-center gap-10">
             <ShieldAlert size={18} />
-            <strong>Backend Connection Fault:</strong> {error}
+            <div>
+              <strong>Backend Connection Fault:</strong> {error}
+            </div>
           </div>
         </div>
       )}
@@ -60,11 +63,11 @@ export default function TrafficAnalysis() {
       <div className="cyber-grid" style={{ gridTemplateColumns: '1.2fr 0.8fr', gap: '30px', alignItems: 'stretch' }}>
         
         <div>
-          <PredictionForm onSubmit={handleAnalysisSubmit} loading={loading} />
+          <PredictionForm onSubmit={handleAnalysisSubmit} loading={loading} theme={theme} />
         </div>
 
         <div>
-          <ResultCard result={result} />
+          <ResultCard result={result} theme={theme} />
         </div>
 
       </div>

@@ -1,13 +1,12 @@
-import React from 'react';
-import { ShieldCheck, ShieldAlert, AlertTriangle, Cpu, TrendingUp, Info } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, AlertTriangle, Cpu, Info } from 'lucide-react';
 
 export default function ResultCard({ result }) {
   if (!result) {
     return (
       <div className="cyber-card flex align-center justify-center" style={{ height: '100%', minHeight: '300px', flexDirection: 'column', color: 'var(--text-muted)' }}>
         <ShieldCheck size={48} style={{ marginBottom: '16px', opacity: 0.3 }} />
-        <p style={{ fontSize: '0.95rem' }}>Awaiting network packet metrics...</p>
-        <p style={{ fontSize: '0.8rem', marginTop: '6px' }}>Submit telemetry in the analyzer panel to run real-time AI classification.</p>
+        <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Awaiting network packet metrics...</p>
+        <p style={{ fontSize: '0.8rem', marginTop: '6px', color: 'var(--text-muted)', textAlign: 'center' }}>Submit telemetry in the analyzer panel to run real-time AI classification.</p>
       </div>
     );
   }
@@ -18,12 +17,12 @@ export default function ResultCard({ result }) {
   return (
     <div 
       className={`cyber-card ${isAnomaly ? 'alert-high' : 'alert-low'}`}
-      style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', animation: 'scaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' }}
+      style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', animation: 'fadeIn 0.5s ease-out' }}
     >
       {/* Alert Header */}
       <div>
         <div className="flex align-center justify-between" style={{ marginBottom: '20px' }}>
-          <span className="mono" style={{ fontSize: '0.8rem', padding: '4px 10px', background: 'rgba(0, 0, 0, 0.4)', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <span className="mono" style={{ fontSize: '0.8rem', padding: '4px 10px', background: 'var(--bg-secondary)', borderRadius: '6px', border: '1px solid var(--border-color)', color: 'var(--text-primary)' }}>
             DECISION_NODE // OUT_INFERENCE
           </span>
           <div className="flex align-center gap-10">
@@ -40,9 +39,8 @@ export default function ResultCard({ result }) {
             style={{
               padding: '16px',
               borderRadius: '50%',
-              background: isAnomaly ? 'rgba(255, 56, 56, 0.15)' : 'rgba(5, 236, 140, 0.15)',
+              background: isAnomaly ? 'rgba(239, 68, 68, 0.08)' : 'rgba(16, 185, 129, 0.08)',
               border: `2px solid ${isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)'}`,
-              boxShadow: `0 0 20px ${isAnomaly ? 'rgba(255, 56, 56, 0.3)' : 'rgba(5, 236, 140, 0.3)'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -56,10 +54,10 @@ export default function ResultCard({ result }) {
           </div>
 
           <div>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
               Classification Result
             </span>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, marginTop: '2px', color: '#fff' }}>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: 800, marginTop: '2px', color: 'var(--text-primary)' }}>
               {status}
             </h3>
           </div>
@@ -68,8 +66,8 @@ export default function ResultCard({ result }) {
         {/* Breakdown details */}
         <div className="cyber-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '30px' }}>
           
-          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
-            <span className="flex align-center gap-10" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '6px' }}>
+          <div style={{ background: 'var(--bg-secondary)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+            <span className="flex align-center gap-10" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '6px', fontWeight: 600 }}>
               <AlertTriangle size={12} style={{ color: isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)' }} /> Threat Level
             </span>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)' }}>
@@ -77,11 +75,11 @@ export default function ResultCard({ result }) {
             </span>
           </div>
 
-          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '14px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.03)' }}>
-            <span className="flex align-center gap-10" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '6px' }}>
+          <div style={{ background: 'var(--bg-secondary)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+            <span className="flex align-center gap-10" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '6px', fontWeight: 600 }}>
               <Cpu size={12} style={{ color: 'var(--accent-cyan)' }} /> Confidence
             </span>
-            <span className="text-glow-cyan" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
               {confidence}%
             </span>
           </div>
@@ -90,19 +88,18 @@ export default function ResultCard({ result }) {
 
         {/* High-tech progress bar */}
         <div style={{ marginBottom: '24px' }}>
-          <div className="flex justify-between" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+          <div className="flex justify-between" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}>
             <span>MODEL_CONFIDENCE_THRESHOLD</span>
-            <span>{confidence}%</span>
+            <span style={{ color: 'var(--text-primary)' }}>{confidence}%</span>
           </div>
-          <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+          <div style={{ width: '100%', height: '8px', background: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden', border: '1px solid var(--border-color)' }}>
             <div 
               style={{
                 width: `${confidence}%`,
                 height: '100%',
                 background: isAnomaly ? 'linear-gradient(90deg, var(--accent-blue), var(--threat-high))' : 'linear-gradient(90deg, var(--accent-blue), var(--threat-low))',
                 borderRadius: '4px',
-                transition: 'width 1s ease-out',
-                boxShadow: `0 0 10px ${isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)'}`
+                transition: 'width 1s ease-out'
               }}
             ></div>
           </div>
@@ -112,18 +109,20 @@ export default function ResultCard({ result }) {
       {/* Explanatory description card */}
       <div 
         style={{
-          background: 'rgba(10, 15, 29, 0.6)',
-          borderLeft: `3px solid ${isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)'}`,
+          background: 'var(--bg-secondary)',
+          borderLeft: `4px solid ${isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)'}`,
           padding: '16px',
-          borderRadius: '0 8px 8px 0',
+          borderRadius: '8px',
           display: 'flex',
           gap: '12px',
-          alignItems: 'flex-start'
+          alignItems: 'flex-start',
+          border: '1px solid var(--border-color)',
+          borderLeftWidth: '4px'
         }}
       >
         <Info size={16} style={{ color: isAnomaly ? 'var(--threat-high)' : 'var(--threat-low)', marginTop: '2px', flexShrink: 0 }} />
         <div>
-          <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff', marginBottom: '4px' }}>
+          <h4 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
             {isAnomaly ? 'Threat Signature Detected' : 'No Anomalous Signatures'}
           </h4>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>
