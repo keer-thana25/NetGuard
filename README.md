@@ -32,8 +32,6 @@ to classify traffic as:
 
 Users manually enter network traffic parameters, and the ML model predicts whether the traffic is **Normal or Anomalous**.
 
-⚠️ **Note:**  
-This is a **prototype/demo implementation**. Future versions will include real-time packet monitoring and automated traffic ingestion.
 
 ---
 
