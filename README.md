@@ -3,7 +3,7 @@
 
 
 🌐 **Live Website:**  
-(https://net-guard-kohl.vercel.app/)
+https://net-guard-kohl.vercel.app/
 
 ---
 
