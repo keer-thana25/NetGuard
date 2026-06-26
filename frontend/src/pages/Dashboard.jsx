@@ -1,5 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Activity, ShieldAlert, Cpu, CheckCircle, ArrowRight, ShieldCheck, Terminal } from 'lucide-react';
+import { Activity, ShieldAlert, Cpu, CheckCircle, ArrowRight, ShieldCheck, Terminal, BarChart3, PieChart } from 'lucide-react';
+import { 
+  TrafficTrendsChart, 
+  ProtocolDistributionChart, 
+  PortAnalysisChart, 
+  AnomalyDistributionChart 
+} from '../components/Charts';
+
+// Pre-packaged simulated traffic packet trend history
+const TREND_DATA = [
+  { time: '14:00', packetSize: 0.25, trafficRate: 1.25 },
+  { time: '14:05', packetSize: 0.33, trafficRate: 0.95 },
+  { time: '14:10', packetSize: 0.85, trafficRate: 3.42 },
+  { time: '14:15', packetSize: 0.92, trafficRate: 8.54 },
+  { time: '14:20', packetSize: 0.41, trafficRate: 2.11 },
+  { time: '14:25', packetSize: 0.35, trafficRate: 1.15 },
+  { time: '14:30', packetSize: 0.28, trafficRate: 0.78 }
+];
 
 const INITIAL_LOGS = [
   { time: '14:24:02', src: '192.168.1.15', dst: '8.8.8.8', proto: 'UDP', port: '53', status: 'Normal', risk: 'Low', class: 'safe' },
@@ -9,7 +26,7 @@ const INITIAL_LOGS = [
   { time: '14:23:10', src: '172.16.0.4', dst: '192.168.1.5', proto: 'UDP', port: '161', status: 'Anomaly', risk: 'High', class: 'danger' },
 ];
 
-export default function Dashboard({ onNavigate }) {
+export default function Dashboard({ onNavigate, theme }) {
   const [liveLogs, setLiveLogs] = useState(INITIAL_LOGS);
   const [stats, setStats] = useState({
     total: 100241,
@@ -62,21 +79,21 @@ export default function Dashboard({ onNavigate }) {
         style={{ 
           marginBottom: '30px', 
           background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%)',
-          borderLeft: '4px solid var(--accent-purple)',
+          borderLeft: '2px solid #1f6feb',
           boxShadow: 'var(--card-shadow)',
           padding: '40px'
         }}
       >
         <div style={{ maxWidth: '800px' }}>
-          <span className="mono" style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.15em', color: 'var(--accent-cyan)' }}>
-            CYBERSECURITY DEFENSE SYSTEM ACTIVE
+          <span className="mono" style={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.15em', color: 'var(--accent-blue)' }}>
+            Cybersecurity defense system active
           </span>
           <h1 style={{ 
             fontSize: '3rem', 
             fontWeight: 800, 
             marginTop: '10px', 
             marginBottom: '10px', 
-            background: 'linear-gradient(90deg, var(--text-primary) 30%, var(--accent-purple))', 
+            background: 'linear-gradient(90deg, var(--text-primary) 30%, #1f6feb)', 
             WebkitBackgroundClip: 'text', 
             WebkitTextFillColor: 'transparent',
             letterSpacing: '-0.02em'
@@ -91,7 +108,8 @@ export default function Dashboard({ onNavigate }) {
           </p>
           <button 
             className="cyber-btn"
-            onClick={() => onNavigate('analysis')}
+            onClick={() => onNavigate('live-monitor')}
+            style={{ background: '#1f6feb' }}
           >
             Launch Traffic Analyzer <ArrowRight size={16} />
           </button>
@@ -102,11 +120,11 @@ export default function Dashboard({ onNavigate }) {
       <div className="cyber-grid" style={{ marginBottom: '30px' }}>
         
         <div className="cyber-card" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ background: 'rgba(37, 99, 235, 0.08)', padding: '14px', borderRadius: '12px', color: 'var(--accent-blue)', border: '1px solid rgba(37, 99, 235, 0.15)' }}>
+          <div style={{ color: 'var(--text-muted)' }}>
             <Activity size={24} />
           </div>
           <div>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.05em' }}>Analyzed Telemetry</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em' }}>Analyzed telemetry</span>
             <h4 className="mono" style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '2px', color: 'var(--text-primary)' }}>
               {stats.total.toLocaleString()}
             </h4>
@@ -114,11 +132,11 @@ export default function Dashboard({ onNavigate }) {
         </div>
 
         <div className="cyber-card" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ background: 'rgba(239, 68, 68, 0.08)', padding: '14px', borderRadius: '12px', color: 'var(--threat-high)', border: '1px solid rgba(239, 68, 68, 0.15)' }}>
+          <div style={{ color: 'var(--text-muted)' }}>
             <ShieldAlert size={24} />
           </div>
           <div>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.05em' }}>Threats Isolated</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em' }}>Threats isolated</span>
             <h4 className="mono" style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '2px', color: 'var(--threat-high)' }}>
               {stats.threats.toLocaleString()}
             </h4>
@@ -126,25 +144,25 @@ export default function Dashboard({ onNavigate }) {
         </div>
 
         <div className="cyber-card" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ background: 'rgba(6, 182, 212, 0.08)', padding: '14px', borderRadius: '12px', color: 'var(--accent-cyan)', border: '1px solid rgba(6, 182, 212, 0.15)' }}>
+          <div style={{ color: 'var(--text-muted)' }}>
             <Cpu size={24} />
           </div>
           <div>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.05em' }}>Model Precision</span>
-            <h4 className="mono" style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '2px', color: 'var(--accent-cyan)' }}>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em' }}>Model precision</span>
+            <h4 className="mono" style={{ fontSize: '1.75rem', fontWeight: 800, marginTop: '2px', color: 'var(--threat-low)' }}>
               {stats.accuracy}%
             </h4>
           </div>
         </div>
 
         <div className="cyber-card" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ background: 'rgba(16, 185, 129, 0.08)', padding: '14px', borderRadius: '12px', color: 'var(--threat-low)', border: '1px solid rgba(16, 185, 129, 0.15)' }}>
+          <div style={{ color: 'var(--text-muted)' }}>
             <CheckCircle size={24} />
           </div>
           <div>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.05em' }}>Defensive State</span>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 600, letterSpacing: '0.05em' }}>Defensive state</span>
             <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginTop: '4px', color: 'var(--threat-low)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span className="pulse-indicator green" style={{ width: '8px', height: '8px' }}></span> MONITORING
+              <span className="pulse-indicator green" style={{ width: '8px', height: '8px' }}></span> Monitoring
             </h4>
           </div>
         </div>
@@ -155,15 +173,15 @@ export default function Dashboard({ onNavigate }) {
       <div className="cyber-card">
         <div className="flex align-center justify-between" style={{ marginBottom: '20px' }}>
           <div>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
-              <Terminal size={16} /> Live Packet Stream Simulation
+            <h3 style={{ fontSize: '15px', fontWeight: 500, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
+              <Terminal size={16} /> Live packet stream simulation
             </h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
               Real-time inbound connections classified dynamically by the backend random forest model.
             </p>
           </div>
           <span className="mono" style={{ fontSize: '0.75rem', padding: '4px 8px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: '4px', color: 'var(--text-primary)' }}>
-            LIVE_FEED
+            live_feed
           </span>
         </div>
 
@@ -182,11 +200,19 @@ export default function Dashboard({ onNavigate }) {
             </thead>
             <tbody>
               {liveLogs.map((log, idx) => (
-                <tr key={idx} style={{ animation: 'fadeIn 0.4s ease-out' }}>
+                <tr 
+                  key={idx} 
+                  style={{ 
+                    animation: 'fadeIn 0.4s ease-out',
+                    backgroundColor: theme === 'light' 
+                      ? (idx % 2 === 0 ? '#ffffff' : '#f9fafb') 
+                      : (idx % 2 === 0 ? '#161b22' : '#1c2333')
+                  }}
+                >
                   <td className="mono" style={{ color: 'var(--text-secondary)' }}>{log.time}</td>
                   <td className="mono" style={{ color: 'var(--text-primary)' }}>{log.src}</td>
                   <td className="mono" style={{ color: 'var(--text-primary)' }}>{log.dst}</td>
-                  <td className="mono" style={{ color: log.proto === 'TCP' ? 'var(--accent-cyan)' : 'var(--accent-purple)' }}>{log.proto}</td>
+                  <td className="mono" style={{ color: log.proto === 'TCP' ? 'var(--accent-blue)' : 'var(--accent-purple)' }}>{log.proto}</td>
                   <td className="mono" style={{ color: 'var(--text-primary)' }}>{log.port}</td>
                   <td>
                     <span 
@@ -222,6 +248,54 @@ export default function Dashboard({ onNavigate }) {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Threat Analytics Section */}
+      <div style={{ marginTop: '40px', marginBottom: '24px' }}>
+        <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '4px' }}>
+          Threat analytics
+        </h3>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          Interactive telemetry profiles and port vulnerability analysis compiled from network transactions.
+        </p>
+      </div>
+
+      {/* Row 1: Line/Area trend and Port bar charts */}
+      <div className="cyber-grid" style={{ gridTemplateColumns: '1.1fr 0.9fr', gap: '30px', marginBottom: '30px' }}>
+        
+        <div className="cyber-card">
+          <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Activity size={16} style={{ color: 'var(--accent-blue)' }} /> Traffic packet size & rate trends
+          </h3>
+          <TrafficTrendsChart data={TREND_DATA} theme={theme} />
+        </div>
+
+        <div className="cyber-card">
+          <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <BarChart3 size={16} style={{ color: 'var(--accent-blue)' }} /> Vulnerable destination ports analysis
+          </h3>
+          <PortAnalysisChart theme={theme} />
+        </div>
+
+      </div>
+
+      {/* Row 2: Double Pie charts for Protocol split & Anomaly distribution */}
+      <div className="cyber-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '30px' }}>
+        
+        <div className="cyber-card">
+          <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <PieChart size={16} style={{ color: 'var(--accent-blue)' }} /> Inbound telemetry protocol splits
+          </h3>
+          <ProtocolDistributionChart data={{ tcpCount: 684, udpCount: 317 }} theme={theme} />
+        </div>
+
+        <div className="cyber-card">
+          <h3 style={{ fontSize: '15px', fontWeight: 500, color: 'var(--text-primary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ShieldCheck size={16} style={{ color: 'var(--accent-blue)' }} /> Threat class anomaly distribution
+          </h3>
+          <AnomalyDistributionChart normal={745} suspicious={256} theme={theme} />
+        </div>
+
       </div>
 
     </div>

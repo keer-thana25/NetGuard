@@ -3,10 +3,27 @@ import { ShieldCheck, ShieldAlert, AlertTriangle, Cpu, Info } from 'lucide-react
 export default function ResultCard({ result }) {
   if (!result) {
     return (
-      <div className="cyber-card flex align-center justify-center" style={{ height: '100%', minHeight: '300px', flexDirection: 'column', color: 'var(--text-muted)' }}>
-        <ShieldCheck size={48} style={{ marginBottom: '16px', opacity: 0.3 }} />
-        <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Awaiting network packet metrics...</p>
-        <p style={{ fontSize: '0.8rem', marginTop: '6px', color: 'var(--text-muted)', textAlign: 'center' }}>Submit telemetry in the analyzer panel to run real-time AI classification.</p>
+      <div 
+        className="cyber-card" 
+        style={{ 
+          height: '100%', 
+          minHeight: '340px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          padding: '40px 24px', 
+          textAlign: 'center', 
+          color: 'var(--text-muted)' 
+        }}
+      >
+        <ShieldCheck size={48} style={{ marginBottom: '18px', color: 'var(--accent-blue)', opacity: 0.4 }} />
+        <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>
+          Awaiting Network Packet Metrics
+        </p>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', maxWidth: '280px', lineHeight: '1.5' }}>
+          Submit telemetry in the analyzer panel to run real-time AI classification.
+        </p>
       </div>
     );
   }

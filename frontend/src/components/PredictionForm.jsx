@@ -117,7 +117,6 @@ export default function PredictionForm({ onSubmit, loading }) {
         <h2 style={{ fontSize: '1.25rem', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)', fontWeight: 700 }}>
           <Terminal size={18} style={{ color: 'var(--accent-cyan)' }} /> Network Telemetry Analyzer
         </h2>
-        <span className="mono" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>INPUT_PANEL_v1.2</span>
       </div>
 
       {/* Preset Selectors */}
@@ -128,25 +127,26 @@ export default function PredictionForm({ onSubmit, loading }) {
             <button
               key={idx}
               type="button"
-              className="cyber-input"
               style={{
                 width: 'auto',
-                padding: '8px 14px',
-                fontSize: '0.8rem',
+                padding: '6px 14px',
+                fontSize: '0.75rem',
                 cursor: 'pointer',
                 background: 'var(--bg-secondary)',
-                borderColor: 'var(--border-color)',
-                color: 'var(--text-primary)',
-                borderRadius: '6px',
-                fontWeight: 600,
+                border: '1px solid var(--border-color)',
+                color: 'var(--text-secondary)',
+                borderRadius: '20px',
+                fontWeight: 500,
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--accent-cyan)';
+                e.currentTarget.style.borderColor = 'var(--accent-blue)';
+                e.currentTarget.style.color = 'var(--text-primary)';
                 e.currentTarget.style.background = 'var(--bg-card-hover)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-color)';
+                e.currentTarget.style.color = 'var(--text-secondary)';
                 e.currentTarget.style.background = 'var(--bg-secondary)';
               }}
               onClick={() => loadPreset(p)}

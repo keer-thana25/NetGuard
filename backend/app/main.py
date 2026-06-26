@@ -6,6 +6,9 @@ from dotenv import load_dotenv
 # Load models and endpoints on startup
 from app.models.model_loader import model_loader
 from app.routes.prediction import router as prediction_router
+from app.routes.predict_batch import router as predict_batch_router
+from app.routes.live_monitor import router as live_monitor_router
+from app.routes.wifi import router as wifi_router
 
 load_dotenv()
 
@@ -26,6 +29,9 @@ app.add_middleware(
 
 # Mount prediction endpoints
 app.include_router(prediction_router, tags=["Anomaly Detection"])
+app.include_router(predict_batch_router, tags=["Batch Anomaly Detection"])
+app.include_router(live_monitor_router, tags=["Live Network Monitor"])
+app.include_router(wifi_router, tags=["Wi-Fi Guard"])
 
 @app.get("/")
 def read_root():

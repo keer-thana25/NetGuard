@@ -1,15 +1,35 @@
 import { useState, useEffect } from 'react';
 import Dashboard from './pages/Dashboard';
 import TrafficAnalysis from './pages/TrafficAnalysis';
-import Analytics from './pages/Analytics';
-import ModelInsights from './pages/ModelInsights';
+import LiveMonitor from './pages/LiveMonitor';
+import BatchAnalysis from './pages/BatchAnalysis';
 import About from './pages/About';
+import WifiGuard from './pages/WifiGuard';
 import { checkBackendHealth } from './services/api';
-import { Shield, LayoutDashboard, Search, BarChart3, Binary, Info, Wifi, WifiOff, Sun, Moon } from 'lucide-react';
+import { Shield, LayoutDashboard, Search, Upload, Info, Wifi, WifiOff, Sun, Moon, Activity, ChevronDown } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [backendStatus, setBackendStatus] = useState('checking');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+  const [showSplashFadeOut, setShowSplashFadeOut] = useState(false);
+
+  // Splash screen timing control
+  useEffect(() => {
+    const fadeTimer = setTimeout(() => {
+      setShowSplashFadeOut(true);
+    }, 5500);
+
+    const removeTimer = setTimeout(() => {
+      setShowSplash(false);
+    }, 6000);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'dark';
   });
@@ -47,10 +67,16 @@ export default function App() {
         return <Dashboard onNavigate={setActiveTab} theme={theme} />;
       case 'analysis':
         return <TrafficAnalysis theme={theme} />;
+      case 'live-monitor':
+        return <LiveMonitor theme={theme} />;
+      case 'batch':
+        return <BatchAnalysis theme={theme} />;
       case 'analytics':
         return <Analytics theme={theme} />;
       case 'insights':
         return <ModelInsights theme={theme} />;
+      case 'wifi-guard':
+        return <WifiGuard theme={theme} />;
       case 'about':
         return <About theme={theme} />;
       default:
@@ -60,6 +86,23 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', transition: 'background var(--transition-speed) ease' }}>
+      
+      {showSplash && (
+        <div 
+          style={{
+            opacity: showSplashFadeOut ? 0 : 1,
+            transition: 'opacity 0.5s ease-out',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 999999
+          }}
+        >
+          <SplashScreen />
+        </div>
+      )}
       
       {/* Top Navbar */}
       <header 
@@ -71,7 +114,7 @@ export default function App() {
           top: 0,
           zIndex: 100,
           padding: '0 24px',
-          height: '70px',
+          height: '60px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'between',
@@ -122,19 +165,19 @@ export default function App() {
             </button>
 
             <button
-              onClick={() => setActiveTab('analytics')}
-              className={`nav-button ${activeTab === 'analytics' ? 'active' : ''}`}
-              id="nav-analytics"
+              onClick={() => setActiveTab('live-monitor')}
+              className={`nav-button ${activeTab === 'live-monitor' ? 'active' : ''}`}
+              id="nav-live-monitor"
             >
-              <BarChart3 size={16} /> Analytics
+              <Activity size={16} /> Live Monitor
             </button>
 
             <button
-              onClick={() => setActiveTab('insights')}
-              className={`nav-button ${activeTab === 'insights' ? 'active' : ''}`}
-              id="nav-insights"
+              onClick={() => setActiveTab('wifi-guard')}
+              className={`nav-button ${activeTab === 'wifi-guard' ? 'active' : ''}`}
+              id="nav-wifi-guard"
             >
-              <Binary size={16} /> Model Insights
+              <Wifi size={16} /> Wi-Fi Guard
             </button>
 
             <button
@@ -142,7 +185,7 @@ export default function App() {
               className={`nav-button ${activeTab === 'about' ? 'active' : ''}`}
               id="nav-about"
             >
-              <Info size={16} /> About
+              <Info size={16} /> About & Model
             </button>
 
           </nav>
@@ -150,6 +193,69 @@ export default function App() {
           {/* Right Side: Theme Toggle & Health Check Indicator */}
           <div className="flex align-center gap-20">
             
+            {/* Tools Dropdown Button */}
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className={`nav-button ${activeTab === 'batch' ? 'active' : ''}`}
+                style={{ 
+                  borderRadius: '6px', 
+                  padding: '8px 16px', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '6px',
+                  background: activeTab === 'batch' ? 'var(--navbar-bg-active)' : 'transparent',
+                  color: activeTab === 'batch' ? 'var(--navbar-text-active)' : 'var(--navbar-text-inactive)',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+                id="nav-tools-dropdown"
+              >
+                <span>Tools</span> <ChevronDown size={14} />
+              </button>
+              {dropdownOpen && (
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '42px',
+                    right: 0,
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                    zIndex: 1000,
+                    width: '180px',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <button
+                    onClick={() => {
+                      setActiveTab('batch');
+                      setDropdownOpen(false);
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: activeTab === 'batch' ? 'var(--navbar-bg-active)' : 'transparent',
+                      color: activeTab === 'batch' ? 'var(--navbar-text-active)' : 'var(--text-secondary)',
+                      border: 'none',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      fontSize: '0.9rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      transition: 'background 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-card-hover)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = activeTab === 'batch' ? 'var(--navbar-bg-active)' : 'transparent'}
+                  >
+                    <Upload size={14} /> Batch Analysis
+                  </button>
+                </div>
+              )}
+            </div>
+
             {/* Theme Toggle Button */}
             <button
               onClick={toggleTheme}
@@ -258,6 +364,144 @@ export default function App() {
         <p style={{ marginTop: '4px' }}>&copy; 2026 NetGuard. All rights reserved. Real-time Threat Intelligence.</p>
       </footer>
 
+    </div>
+  );
+}
+
+function SplashScreen() {
+  return (
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        background: '#0d1117',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 99999,
+        color: '#fff',
+        fontFamily: 'var(--font-sans)',
+        overflow: 'hidden'
+      }}
+    >
+      <style>{`
+        @keyframes slowPulse {
+          0%, 100% {
+            transform: scale(1);
+            filter: drop-shadow(0 0 25px rgba(31, 111, 235, 0.45));
+          }
+          50% {
+            transform: scale(1.06);
+            filter: drop-shadow(0 0 50px rgba(6, 182, 212, 0.65));
+          }
+        }
+        @keyframes expandLetterSpacing {
+          0% {
+            opacity: 0;
+            letter-spacing: -0.1em;
+            transform: translateY(10px);
+          }
+          40% {
+            opacity: 1;
+            letter-spacing: 0.15em;
+            transform: translateY(0);
+          }
+          100% {
+            opacity: 1;
+            letter-spacing: 0.25em;
+          }
+        }
+        @keyframes slowRotate {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        @keyframes fadeInMuted {
+          0% { opacity: 0; }
+          30% { opacity: 0; }
+          100% { opacity: 0.5; }
+        }
+        .splash-shield-container {
+          animation: slowPulse 5s infinite ease-in-out;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 40px;
+        }
+        .splash-halo {
+          position: absolute;
+          width: 140px;
+          height: 140px;
+          border-radius: 50%;
+          border: 1px dashed rgba(31, 111, 235, 0.3);
+          animation: slowRotate 20s linear infinite;
+        }
+        .splash-title {
+          font-family: var(--font-mono);
+          font-size: 2.75rem;
+          font-weight: 800;
+          letter-spacing: 0.2em;
+          text-align: center;
+          animation: expandLetterSpacing 12s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+          color: #ffffff;
+        }
+        .splash-subtitle {
+          font-size: 0.85rem;
+          color: #8b949e;
+          text-transform: uppercase;
+          letter-spacing: 0.3em;
+          margin-top: 16px;
+          animation: fadeInMuted 8s ease-out forwards;
+        }
+      `}</style>
+
+      {/* Dynamic Aura background */}
+      <div 
+        style={{
+          position: 'absolute',
+          width: '400px',
+          height: '400px',
+          background: 'radial-gradient(circle, rgba(31, 111, 235, 0.1) 0%, rgba(0,0,0,0) 70%)',
+          pointerEvents: 'none'
+        }}
+      />
+
+      {/* Central Rotating Halo and Shield */}
+      <div className="splash-shield-container">
+        <div className="splash-halo" />
+        <div 
+          style={{
+            background: 'linear-gradient(135deg, #1f6feb, #06b6d4)',
+            padding: '28px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2,
+            boxShadow: 'inset 0 0 15px rgba(255, 255, 255, 0.25)'
+          }}
+        >
+          <Shield size={72} style={{ color: '#fff' }} />
+        </div>
+      </div>
+
+      {/* Animated NetGuard Title */}
+      <h1 className="splash-title">
+        NET<span style={{ color: '#1f6feb' }}>GUARD</span>
+      </h1>
+
+      {/* Muted Subtitle */}
+      <div className="splash-subtitle">
+        AI-Powered Telemetry Auditing Suite
+      </div>
     </div>
   );
 }

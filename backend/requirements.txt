@@ -6,3 +6,9 @@ joblib>=1.2.0
 numpy>=1.24.0
 pandas>=2.0.0
 python-dotenv>=1.0.0
+rapidfuzz
+openpyxl
+python-multipart
+scapy>=2.5.0
+reportlab>=4.0.0
+psutil>=5.9.0
