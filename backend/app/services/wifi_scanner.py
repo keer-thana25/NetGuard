@@ -287,10 +287,14 @@ class WifiScanner:
                 {"ssid": "Attacker_Spoofing_Node", "bssid": "b8:27:eb:99:aa:bb", "auth": "WPA2-Personal", "cipher": "CCMP", "signal": 78, "channel": 11, "radio_type": "802.11n"}
             ]
         else: # Fallback dummy data if no wifi interface found
+            fallback_ssid = os.getenv("WIFI_FALLBACK_SSID", "Local_Network_Bridge")
+            fallback_bssid = os.getenv("WIFI_FALLBACK_BSSID", "00:26:82:11:22:33")
+            fallback_auth = os.getenv("WIFI_FALLBACK_AUTH", "WPA2-Personal")
+            
             connected = {
-                "ssid": "Local_Network_Bridge",
-                "bssid": "00:26:82:11:22:33",
-                "auth": "WPA2-Personal",
+                "ssid": fallback_ssid,
+                "bssid": fallback_bssid,
+                "auth": fallback_auth,
                 "cipher": "CCMP",
                 "signal": 90,
                 "radio_type": "802.11ac",
